@@ -1,0 +1,19 @@
+{
+    "name": "blockpress/wptw",
+    "description": "WordPress Plugin to integrate Tailwind",
+    "type": "library",
+    "require": {
+        "sabberworm/php-css-parser": "^8.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Blockpress\\Wptw\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Greg Hunt",
+            "email": "hplugins@greghunt.dev"
+        }
+    ]
+}
