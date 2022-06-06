@@ -13,9 +13,14 @@ class Admin
 
     public function enqueue_scripts()
     {
-        wp_enqueue_script(
-            $this->tailpress->name . '-cdn',
-            'https://cdn.tailwindcss.com'
-        );
+        $cdn_name = $this->tailpress->name . '-cdn';
+        wp_enqueue_script($cdn_name, 'https://cdn.tailwindcss.com');
+        wp_add_inline_script($cdn_name, "        
+            tailwind.config = {
+                corePlugins: {
+                    preflight: false,
+                }
+            }
+        ", 'after');
     }
 }

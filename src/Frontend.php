@@ -32,13 +32,13 @@ class Frontend
                 $cdn_name,
                 'https://cdn.tailwindcss.com'
             );
-            wp_add_inline_script($cdn_name, '        
+            wp_add_inline_script($cdn_name, "        
                 tailwind.config = {
                     corePlugins: {
                         preflight: false,
                     }
                 }
-            ', 'after');
+            ", 'after');
 
             wp_enqueue_script(
                 $this->tailpress->name,

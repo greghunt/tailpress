@@ -3,6 +3,7 @@ Contributors: blockpress
 Donate link: https://blockpress.dev
 Tags: tailwind, blocks, gutenberg, utility classes, css
 Requires at least: 5.2
+Requires PHP: 5.6
 Tested up to: 6.0
 Stable tag: 0.1.0
 License: GPLv2 or later
@@ -12,14 +13,30 @@ Seamless integration of [Tailwind](https://tailwindcss.com/) for WordPress.
 
 == Description ==
 
-Tailwind is the perfect companion framework to elevate your WordPress development, especially in the new block editor. It's utility based style framework encourages using just the right amount of classes that you may need. 
+[Tailwind CSS](https://tailwindcss.com/) is a great companion to building block based sites in WordPress. Unfortunately, it's been pretty complicated to add Tailwind CSS to WordPress since it needs to be compiled with Node.js in order to be production ready. 
 
-Unfortunately, up until now, integrating Tailwind with WordPress has been rather difficult due to having to compile the framework with Node.js.
+This plugin takes care of that by adding Tailwind CSS to WordPress in one easy step (activate the plugin) and at the same time takes care of performance and caching so your site remains fast and production ready!
 
-This plugin allows solves this problem by:
+=== Who It's For ===
+This is primarily for developers and users that are familiar with Tailwind CSS and comfortable styling their site using their utility class framework. 
 
-* Using the official Tailwind CDN to dynamically add any class on the fly
-* Caching the dynamically generated CSS to avoid performance issues on the frontend of your production site. 
+It's also for those who have struggled to add Tailwind to their workflow without having to constantly compile their CSS every time the classes in their page content changes.
+
+=== How it Works ===
+
+* Uses the official Tailwind CDN to dynamically add any class on the fly
+* Caches the dynamically generated CSS to avoid performance issues on the frontend of your production site. 
+
+https://youtu.be/SPYmJfExn-U
+
+
+== Frequently Asked Questions ==
+
+=== Can this be used in production? ===
+Yes! Although the styles in the backend get generated on the fly, the CSS on the frontend gets cached for every page. Changing any classes on the page will bust the cache automatically so it'll still stay up to date with any changes.
+
+=== Can this be used outside the block editor? ===
+Yes! This will work anywhere on the backend or front end of your site that uses classes to style things. 
 
 == Installation ==
 
