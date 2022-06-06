@@ -10,14 +10,13 @@ window.addEventListener("load", () => {
             ];
 
             const hash = md5(classNames.join(' '));
-            console.log(hash);
-            fetch(wptw_ajax_object.ajax_url, {
+            fetch(tailpress_ajax_object.ajax_url, {
                 method: 'POST',
                 credentials: 'same-origin',
                 headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
                 body: new URLSearchParams({
-                    action: 'wptw_ajax',
-                    _ajax_nonce: wptw_ajax_object.ajax_nonce,
+                    action: 'tailpress_ajax',
+                    _ajax_nonce: tailpress_ajax_object.ajax_nonce,
                     url: window.location.href,
                     hash: hash,
                     css: document.querySelector('head style:last-of-type')?.innerText,

@@ -1,4 +1,4 @@
-# WPTW
+# Tailpress
 ## Tailwind CSS for WordPress
 
 Seamlessly add Tailwind to your WordPress site without any build steps.

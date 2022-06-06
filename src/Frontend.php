@@ -1,41 +1,59 @@
 <?php
 
-namespace Blockpress\Wptw;
-
-use Sabberworm\CSS\Parser as CssParser;
+namespace Blockpress\Tailpress;
 
 class Frontend
 {
+    protected $tailpress;
+
+    public function __construct($tailpress)
+    {
+        $this->tailpress = $tailpress;
+    }
+
     public function enqueue_scripts()
     {
-        $hash = get_url_hash();
-        $files = glob(WPTW_CSS_DIR . "/$hash.*.css");
-        $file_cache = $files[0];
-
-        if (file_exists($file_cache)) {
+        $hash = $this->tailpress->get_url_hash();
+        $files = glob($this->tailpress->css_cache_dir . "/$hash.*.css");
+        if (isset($files[0]) && file_exists($files[0])) {
+            $file_cache = $files[0];
             add_action('wp_head', function () use ($file_cache) {
                 $css = file_get_contents($file_cache);
-                $id = WPTW_PLUGIN_NAME;
-                echo "<style id='$id'>$css</style>";
+                echo "<style id='{$this->tailpress->name}'>$css</style>";
             }, 50);
         } else {
-            wp_enqueue_script(WPTW_PLUGIN_NAME . '-md5', WPTW_PLUGIN_JS . 'md5.js');
-            wp_enqueue_script(WPTW_CDN_SCRIPT_NAME, 'https://cdn.tailwindcss.com');
-            wp_add_inline_script(WPTW_CDN_SCRIPT_NAME, '        
+            $cdn_name = $this->tailpress->name . '-cdn';
+            $md5_name = $this->tailpress->name . '-md5';
+            wp_enqueue_script(
+                $md5_name,
+                $this->tailpress->assets_js . 'md5.js'
+            );
+            wp_enqueue_script(
+                $cdn_name,
+                'https://cdn.tailwindcss.com'
+            );
+            wp_add_inline_script($cdn_name, '        
                 tailwind.config = {
                     corePlugins: {
                         preflight: false,
                     }
                 }
             ', 'after');
-            wp_enqueue_script(WPTW_PLUGIN_NAME, WPTW_PLUGIN_JS . 'cache-tw.js', WPTW_CDN_SCRIPT_NAME, array(WPTW_PLUGIN_NAME . '-md5', WPTW_CDN_SCRIPT_NAME));
+
+            wp_enqueue_script(
+                $this->tailpress->name,
+                $this->tailpress->assets_js . 'cache.js',
+                array($md5_name, $cdn_name)
+            );
 
             wp_localize_script(
-                WPTW_PLUGIN_NAME,
-                WPTW_PLUGIN_NAME . '_ajax_object',
+                $this->tailpress->name,
+                $this->tailpress->name . '_ajax_object',
                 array(
                     'ajax_url'   => admin_url('admin-ajax.php'),
-                    'ajax_nonce' => wp_create_nonce(WPTW_AJAX_NONCE_NAME)
+                    'ajax_nonce' => wp_create_nonce(
+                        $this->tailpress->ajax_nonce_name
+                    )
                 ),
             );
         }
@@ -43,23 +61,19 @@ class Frontend
 
     public function cache_styles()
     {
-        // check nonce
-        check_ajax_referer(WPTW_AJAX_NONCE_NAME, '_ajax_nonce');
-        $url_hash =  get_url_hash(sanitize_url($_POST['url']));
+        check_ajax_referer($this->tailpress->ajax_nonce_name, '_ajax_nonce');
+        $url_hash =  $this->tailpress->get_url_hash($_POST['url']);
         $page_hash = sanitize_text_field($_POST['hash']);
-
-        if (!file_exists(WPTW_CSS_DIR)) {
-            wp_mkdir_p(WPTW_CSS_DIR);
+        if (!file_exists($this->tailpress->css_cache_dir)) {
+            wp_mkdir_p($this->tailpress->css_cache_dir);
         }
 
         if (isset($_POST['css']) && !empty($_POST['css'])) {
             $filename = "$url_hash.$page_hash.css";
-            $parser = new CssParser($_POST['css']);
-            $cssDocument = $parser->parse();
-
+            $sanitized_css = sanitize_textarea_field(stripslashes($_POST['css']));
             file_put_contents(
-                WPTW_CSS_DIR . "/$filename",
-                $cssDocument->render()
+                $this->tailpress->css_cache_dir . "/$filename",
+                $sanitized_css
             );
         }
 

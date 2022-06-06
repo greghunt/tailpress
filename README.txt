@@ -12,7 +12,7 @@ Seamless integration of [Tailwind](https://tailwindcss.com/) for WordPress.
 
 == Description ==
 
-Tailwind is the perfect companion framework to elevate your WordPress development, especially in the new block editor. It's utility-first model encourages using just the right amount of classes that you may need. 
+Tailwind is the perfect companion framework to elevate your WordPress development, especially in the new block editor. It's utility based style framework encourages using just the right amount of classes that you may need. 
 
 Unfortunately, up until now, integrating Tailwind with WordPress has been rather difficult due to having to compile the framework with Node.js.
 
