@@ -18,8 +18,11 @@ class Frontend
         if (isset($files[0]) && file_exists($files[0])) {
             $file_cache = $files[0];
             add_action('wp_head', function () use ($file_cache) {
-                $css = file_get_contents($file_cache);
-                echo "<style id='{$this->tailpress->name}'>$css</style>";
+                echo sprintf(
+                    '<style id="%s">%s</style>',
+                    esc_attr($this->tailpress->name),
+                    esc_html(file_get_contents($file_cache))
+                );
             }, 50);
         } else {
             $cdn_name = $this->tailpress->name . '-cdn';
@@ -30,7 +33,7 @@ class Frontend
             );
             wp_enqueue_script(
                 $cdn_name,
-                'https://cdn.tailwindcss.com'
+                $this->tailpress->assets_js . 'tw-3.0.24.js'
             );
             wp_add_inline_script($cdn_name, "        
                 tailwind.config = {
