@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * The main plugin class
+ *
+ * @link              https://blockpress.dev/tailwind-wordpress/
+ * @since             0.1.1
+ * @package           Tailpress
+ *
+ * @wordpress-plugin
+ */
+
 namespace Blockpress\Tailpress;
 
 use Blockpress\Tailpress\Frontend;

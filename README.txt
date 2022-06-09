@@ -5,7 +5,7 @@ Tags: tailwind, blocks, gutenberg, utility classes, css
 Requires at least: 5.2
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,9 @@ This section describes how to install the plugin and get it working.
 The non-desktop preview modes in the block editor utilize an iframe and therefore your Tailwind styles won't be visible here.
 
 == Changelog ==
+
+= 0.1.1 =
+* Fixed buffer notice
 
 = 0.1.0 =
 * First version. 

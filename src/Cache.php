@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * For maintaining the CSS file cache.
+ *
+ * @link              https://blockpress.dev/tailwind-wordpress/
+ * @since             0.1.1
+ * @package           Tailpress
+ *
+ * @wordpress-plugin
+ */
+
 namespace Blockpress\Tailpress;
 
 class Cache
@@ -19,7 +29,9 @@ class Cache
         }, $this->priority);
 
         add_action('shutdown', function () {
-            ob_end_flush();
+            if (ob_get_length() > 0) {
+                ob_end_flush();
+            }
         }, -1 * $this->priority);
     }
 
