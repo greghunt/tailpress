@@ -7,6 +7,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
+
     - name: Install dependencies
       uses: php-actions/composer@v6
 
@@ -14,7 +16,6 @@ jobs:
       run: |
         composer install
 
-    - uses: actions/checkout@master
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@stable
       env:
