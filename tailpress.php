@@ -4,7 +4,7 @@
  * The plugin bootstrap file
  *
  * @link              https://blockpress.dev/tailwind-wordpress/
- * @since             0.1.1
+ * @since             0.1.2
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -12,7 +12,7 @@
  * Plugin Name:       TailPress
  * Plugin URI:        https://blockpress.dev/tailwind-wordpress/
  * Description:       Seamlessly add Tailwind to your WordPress site without any build steps.
- * Version:           0.1.1
+ * Version:           0.1.2
  * Author:            blockpress
  * Author URI:        https://blockpress.dev
  * License:           GPL-2.0+
@@ -29,4 +29,4 @@ require 'vendor/autoload.php';
 
 use Blockpress\Tailpress\Tailpress;
 
-(new Tailpress(__FILE__, '0.1.1'))->boot();
+(new Tailpress(__FILE__, '0.1.2'))->boot();
