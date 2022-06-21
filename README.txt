@@ -49,7 +49,7 @@ This section describes how to install the plugin and get it working.
 
 == Known Issues ==
 
-The non-desktop preview modes in the block editor utilize an iframe and therefore your Tailwind styles won't be visible here.
+The non-desktop preview modes in the block editor utilize an iframe and [don't load assets properly](https://github.com/WordPress/gutenberg/issues/38673). Therefore your Tailwind styles won't be visible here.
 
 == Changelog ==
 

@@ -63,6 +63,12 @@ class Tailpress
                 $admin, 'enqueue_scripts'
             )
         );
+        add_action(
+            'enqueue_block_editor_assets',
+            array(
+                $admin, 'enqueue_scripts'
+            )
+        );
     }
 
     public function get_url_hash($url = null)
