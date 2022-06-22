@@ -4,7 +4,7 @@
  * The main plugin class
  *
  * @link              https://blockpress.dev/tailwind-wordpress/
- * @since             0.1.1
+ * @since             0.2.0
  * @package           Tailpress
  *
  * @wordpress-plugin

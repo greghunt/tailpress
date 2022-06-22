@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Responsible for managing the frontend of the website.
+ *
+ * @link              https://blockpress.dev/tailwind-wordpress/
+ * @since             0.2.0
+ * @package           Tailpress
+ *
+ * @wordpress-plugin
+ */
+
 namespace Blockpress\Tailpress;
 
 class Frontend

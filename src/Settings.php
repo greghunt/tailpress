@@ -1,10 +1,22 @@
 <?php
 
+/**
+ * Responsible for managing plugin settings
+ *
+ * @link              https://blockpress.dev/tailwind-wordpress/
+ * @since             0.2.0
+ * @package           Tailpress
+ *
+ * @wordpress-plugin
+ */
+
 namespace Blockpress\Tailpress;
 
 /**
  * Manages the creation of settings and controls
  * for this plugin. 
+ * 
+ * @since 0.2.0
  */
 class Settings
 {

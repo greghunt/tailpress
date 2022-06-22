@@ -5,7 +5,7 @@ Tags: tailwind, blocks, gutenberg, utility classes, css
 Requires at least: 5.2
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 0.1.2
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,11 +47,16 @@ This section describes how to install the plugin and get it working.
 3. Simply add classes anywhere you would like in your pages, for example under the "Additional CSS class(es)" of any of your blocks.
 4. That's it! It should just work.
 
+Optionally configure your version of Tailwind under Settings > TailPress.
+
 == Known Issues ==
 
 The non-desktop preview modes in the block editor utilize an iframe and [don't load assets properly](https://github.com/WordPress/gutenberg/issues/38673). Therefore your Tailwind styles won't be visible here.
 
 == Changelog ==
+
+= 0.2.0 =
+* Added a settings page to configure Tailwind.
 
 = 0.1.2 =
 * Fixed interferance in admin panel

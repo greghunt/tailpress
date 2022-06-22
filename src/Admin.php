@@ -1,10 +1,10 @@
 <?php
 
 /**
- * For maintaining the CSS file cache.
+ * For maintaining the admin interface.
  *
  * @link              https://blockpress.dev/tailwind-wordpress/
- * @since             0.1.2
+ * @since             0.2.0
  * @package           Tailpress
  *
  * @wordpress-plugin
