@@ -25,28 +25,18 @@ class Frontend
                 );
             }, 50);
         } else {
-            $cdn_name = $this->tailpress->name . '-cdn';
             $md5_name = $this->tailpress->name . '-md5';
             wp_enqueue_script(
                 $md5_name,
                 $this->tailpress->assets_js . 'md5.js'
             );
-            wp_enqueue_script(
-                $cdn_name,
-                $this->tailpress->assets_js . 'tw-3.0.24.js'
-            );
-            wp_add_inline_script($cdn_name, "        
-                tailwind.config = {
-                    corePlugins: {
-                        preflight: false,
-                    }
-                }
-            ", 'after');
+
+            $this->tailpress->enqueue_tailwind_assets();
 
             wp_enqueue_script(
                 $this->tailpress->name,
                 $this->tailpress->assets_js . 'cache.js',
-                array($md5_name, $cdn_name)
+                array($md5_name, $this->tailpress->main_script_name)
             );
 
             wp_localize_script(

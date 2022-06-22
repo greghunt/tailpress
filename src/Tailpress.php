@@ -12,19 +12,22 @@
 
 namespace Blockpress\Tailpress;
 
-use Blockpress\Tailpress\Frontend;
 use Blockpress\Tailpress\Admin;
 use Blockpress\Tailpress\Cache;
+use Blockpress\Tailpress\Frontend;
+use Blockpress\Tailpress\Settings;
 
 class Tailpress
 {
     protected $name = 'tailpress';
     protected $version;
+    protected $settings;
     protected $plugin_path;
     protected $plugin_url;
     protected $assets_js;
     protected $ajax_nonce_name;
     protected $css_cache_dir;
+    protected $main_script_name;
 
     public function __construct($file, $version)
     {
@@ -34,6 +37,8 @@ class Tailpress
         $this->assets_js = $this->plugin_url . 'js/';
         $this->ajax_nonce_name = $this->name . '_ajax_nonce';
         $this->css_cache_dir = wp_get_upload_dir()['basedir'] . '/' . $this->name;
+        $this->main_script_name = $this->name . '-cdn';
+        $this->settings = new Settings($this);
     }
 
     public function __get($property)
@@ -47,6 +52,9 @@ class Tailpress
         $admin = new Admin($this);
         (new Cache($this))->boot();
 
+        /**
+         * Frontend Hooks
+         */
         add_action(
             'wp_enqueue_scripts',
             array($frontend, 'enqueue_scripts')
@@ -57,6 +65,10 @@ class Tailpress
                 $frontend, 'cache_styles'
             )
         );
+
+        /**
+         * Admin Hooks
+         */
         add_action(
             'admin_enqueue_scripts',
             array(
@@ -69,6 +81,8 @@ class Tailpress
                 $admin, 'enqueue_scripts'
             )
         );
+        add_action('admin_menu', array($this->settings, 'add_menu_item'));
+        add_action('admin_init', array($this->settings, 'init'));
     }
 
     public function get_url_hash($url = null)
@@ -92,5 +106,14 @@ class Tailpress
         if ($shouldNotDie) {
             exit;
         }
+    }
+
+    public function enqueue_tailwind_assets()
+    {
+        $config = $this->settings->get_option('config');
+        if (empty($config)) $config = '{}';
+
+        wp_enqueue_script($this->main_script_name, $this->assets_js . 'tw-3.0.24.js');
+        wp_add_inline_script($this->main_script_name, "tailwind.config = $config", 'after');
     }
 }

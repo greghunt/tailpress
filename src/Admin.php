@@ -12,6 +12,8 @@
 
 namespace Blockpress\Tailpress;
 
+use Blockpress\Tailpress\Settings;
+
 class Admin
 {
     protected $tailpress;
@@ -19,24 +21,14 @@ class Admin
     public function __construct($tailpress)
     {
         $this->tailpress = $tailpress;
+        $this->settings = new Settings($this->tailpress);
     }
 
     public function enqueue_scripts()
     {
-        $cdn_name = $this->tailpress->name . '-cdn';
         $screen = get_current_screen();
         if (is_admin() && $screen->is_block_editor()) {
-            wp_enqueue_script(
-                $cdn_name,
-                $this->tailpress->assets_js . 'tw-3.0.24.js'
-            );
-            wp_add_inline_script($cdn_name, "        
-                tailwind.config = {
-                    corePlugins: {
-                        preflight: false,
-                    }
-                }
-            ", 'after');
+            $this->tailpress->enqueue_tailwind_assets();
         }
     }
 }
