@@ -51,7 +51,13 @@ Optionally configure your version of Tailwind under Settings > TailPress.
 
 == Known Issues ==
 
+### Device Preview Mode in Block Editor
+
 The non-desktop preview modes in the block editor utilize an iframe and [don't load assets properly](https://github.com/WordPress/gutenberg/issues/38673). Therefore your Tailwind styles won't be visible here.
+
+### Page Caching
+
+If you have any page caching on your site, you'll have to clear your cache for the best experience. 
 
 == Changelog ==
 
