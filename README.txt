@@ -1,6 +1,6 @@
 === TailPress – Tailwind for WordPress ===
 Contributors: blockpress
-Donate link: https://blockpress.dev
+Donate link: https://wpblock.dev
 Tags: tailwind, blocks, gutenberg, utility classes, css
 Requires at least: 5.2
 Requires PHP: 5.6

@@ -3,7 +3,7 @@
 /**
  * The main plugin class
  *
- * @link              https://blockpress.dev/tailwind-wordpress/
+ * @link              https://wpblock.dev/tailwind-wordpress/
  * @since             0.2.0
  * @package           Tailpress
  *
