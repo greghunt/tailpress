@@ -49,6 +49,7 @@ class Frontend
                 array($md5_name, $this->tailpress->main_script_name)
             );
 
+            // TODO: give short expiry to nonce.
             wp_localize_script(
                 $this->tailpress->name,
                 $this->tailpress->name . '_ajax_object',
