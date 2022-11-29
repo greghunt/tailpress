@@ -37,6 +37,9 @@ class Cache
 
     public function check_caches($buffer)
     {
+        if (is_user_logged_in())
+            return $buffer;
+
         $url_hash = $this->tailpress->get_url_hash();
         $files = glob($this->tailpress->css_cache_dir . "/$url_hash.*.css");
         if (!empty($files)) {

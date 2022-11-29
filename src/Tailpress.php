@@ -97,10 +97,11 @@ class Tailpress
 
         $path = $uri['path'];
         $query = $uri['query'] ?? '';
+
         return md5($host . $path . $query);
     }
 
-    public function log($message, $shouldNotDie = true)
+    public static function log($message, $shouldNotDie = true)
     {
         error_log(print_r($message, true));
         if ($shouldNotDie) {

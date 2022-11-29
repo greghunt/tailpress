@@ -21,7 +21,6 @@ window.addEventListener("load", () => {
                     hash: hash,
                     css: document.querySelector('head style:last-of-type')?.innerText,
                 })
-            }).then(response => response.json())
-                .then(data => console.log(data));
+            });
         });
 });
