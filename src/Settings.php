@@ -154,15 +154,12 @@ class Settings
     {
         $default_config = <<<EOT
         {
-            corePlugins: {
-                preflight: false,
-            }
+            "preflight": false
         }
         EOT;
 
         add_option($this->options_name, array('config' => $default_config));
         register_setting($this->options_name, $this->options_name);
-
         $this->registerSettings($this->getSettingsConfig());
     }
 
@@ -175,6 +172,15 @@ class Settings
                     [
                         'name' => 'config',
                         'label' => 'Tailwind Config',
+                    ],
+                ],
+            ],
+            'caching' => [
+                'label' => 'Caching',
+                'fields' => [
+                    [
+                        'name' => 'clear-cache',
+                        'label' => 'Cache',
                     ],
                 ],
             ],

@@ -49,6 +49,15 @@ class Cache
         return $buffer;
     }
 
+    public function clear_all_caches()
+    {
+        $files = glob($this->tailpress->css_cache_dir . "/*.css");
+        if (!empty($files)) {
+            foreach ($files as $cache)
+                unlink($cache);
+        }
+    }
+
     private function ends_with($haystack, $needle)
     {
         $length = strlen($needle);

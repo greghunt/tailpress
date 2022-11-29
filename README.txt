@@ -4,8 +4,8 @@ Donate link: https://wpblock.dev
 Tags: tailwind, blocks, gutenberg, utility classes, css
 Requires at least: 5.2
 Requires PHP: 5.6
-Tested up to: 6.0
-Stable tag: 0.2.0
+Tested up to: 6.1
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,10 @@ The non-desktop preview modes in the block editor utilize an iframe and [don't l
 If you have any page caching on your site, you'll have to clear your cache for the best experience. 
 
 == Changelog ==
+
+= 0.3.0 =
+* Added a clear cache button.
+* Use a backend API service for compiling CSS.
 
 = 0.2.0 =
 * Added a settings page to configure Tailwind.
