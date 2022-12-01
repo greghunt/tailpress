@@ -4,7 +4,7 @@
  * For maintaining the admin interface.
  *
  * @link              https://blockpress.dev/tailwind-wordpress/
- * @since             0.2.0
+ * @since             0.3.0
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -56,7 +56,7 @@ class Admin
     public function clear_cache()
     {
         check_ajax_referer($this->admin_nonce_name, '_ajax_nonce');
-        (new Cache($this->tailpress))->clear_all_caches();
+        (new Cache($this->tailpress))->purge_entire_cache();
         echo json_encode("OK");
         die();
     }

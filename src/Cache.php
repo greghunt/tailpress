@@ -1,10 +1,11 @@
 <?php
 
 /**
- * For maintaining the CSS file cache.
+ * For maintaining the CSS file cache. Checks if page content has changed
+ * and generates class list and corresponding CSS file if it has.
  *
  * @link              https://blockpress.dev/tailwind-wordpress/
- * @since             0.1.1
+ * @since             0.3.0
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -12,78 +13,123 @@
 
 namespace Blockpress\Tailpress;
 
+// URL loads and is assigned a unique URL HASH
+// buffer loads and is assigned a unique PAGE HASH
+// check all caches that start with URL HASH
+// if PAGE HASH doesn't match, regerate CSV
 class Cache
 {
-    protected $priority = 10;
     protected $tailpress;
+    protected $url_hash;
+    protected $page_hash;
+    protected $classnames;
+    protected $filename;
+    protected $filepath;
 
     public function __construct($tailpress)
     {
         $this->tailpress = $tailpress;
     }
 
-    public function boot()
+    public function check_buffer($buffer)
     {
-        add_action('template_redirect', function () {
-            ob_start(array($this, 'check_caches'));
-        }, $this->priority);
-
-        add_action('shutdown', function () {
-            if (ob_get_length() > 0) {
-                ob_end_flush();
-            }
-        }, -1 * $this->priority);
-    }
-
-    public function check_caches($buffer)
-    {
-        if (is_user_logged_in())
+        if (is_user_logged_in()) {
             return $buffer;
-
-        $url_hash = $this->tailpress->get_url_hash();
-        $files = glob($this->tailpress->css_cache_dir . "/$url_hash.*.css");
-        if (!empty($files)) {
-            $this->invalidate_caches($url_hash, $files, $buffer);
         }
+
+        if (!file_exists($this->tailpress->css_cache_dir)) {
+            wp_mkdir_p($this->tailpress->css_cache_dir);
+        }
+
+        $this->classnames = $this->get_classnames_from_buffer($buffer);
+        $this->url_hash = $this->tailpress->get_url_hash();
+        $this->page_hash = $this->get_page_hash($this->classnames);
+        $this->filename = implode('.', [
+            $this->url_hash, $this->page_hash, 'csv'
+        ]);
+        $this->filepath = $this->tailpress->css_cache_dir . "/" . $this->filename;
+
+        if ($this->cache_is_valid()) {
+            return $buffer;
+        }
+
+        $this->push();
 
         return $buffer;
     }
 
-    public function clear_all_caches()
+    public function purge_entire_cache()
     {
-        $files = glob($this->tailpress->css_cache_dir . "/*.css");
-        if (!empty($files)) {
-            foreach ($files as $cache)
-                unlink($cache);
+        $files = glob($this->tailpress->css_cache_dir . "/*.*.*");
+        foreach ($files as $file)
+            unlink($file);
+    }
+
+    private function cache_is_valid()
+    {
+        return file_exists($this->filepath) &&
+            file_exists(str_replace('.csv', '.css', $this->filepath));
+    }
+
+    private function push()
+    {
+        $this->purge_invalid_cache();
+        $this->save_page_cache();
+    }
+
+    private function purge_invalid_cache()
+    {
+        $files = glob($this->tailpress->css_cache_dir . "/{$this->url_hash}.*.*");
+        foreach ($files as $file) {
+            unlink($file);
         }
     }
 
-    private function ends_with($haystack, $needle)
+    private function save_page_cache()
     {
-        $length = strlen($needle);
-        if (!$length) {
-            return true;
-        }
-        return substr($haystack, -$length) === $needle;
+        file_put_contents($this->filepath, $this->get_page_cache());
+        $this->save_css_cache();
     }
 
-    private function invalidate_caches($url_hash, $files, $buffer)
+    private function save_css_cache()
+    {
+        $config = json_decode(
+            $this->tailpress->settings->get_option('config') ?? '{}'
+        );
+
+        $css_path = str_replace('.csv', '.css', $this->filepath);
+        $req = new \WP_Http();
+        $result = $req->post('https://tailwind.restedapi.com/api/v1', [
+            'body' => json_encode([
+                'text' => $this->get_page_cache(),
+                'options' => $config,
+            ])
+        ]);
+        $css = $result['body'];
+        file_put_contents($css_path, $css);
+    }
+
+    private function get_page_hash()
+    {
+        return md5($this->get_page_cache($this->classnames));
+    }
+
+    private function get_page_cache()
+    {
+        return implode(PHP_EOL, $this->classnames);
+    }
+
+    private function get_classnames_from_buffer($buffer)
     {
         $re = '/class="([^"]+)"/';
         preg_match_all($re, $buffer, $matches, PREG_SET_ORDER, 0);
-        $classnames = array_values(array_unique(
+        $classes = array_values(array_unique(
             $this->array_flatten(array_map(function ($m) {
-                return explode(' ', $m[1]);
+                return explode(' ', strtolower($m[1]));
             }, $matches))
         ));
-        $page_hash = md5(implode(' ', $classnames));
-
-        $filename = "$url_hash.$page_hash.css";
-        foreach ($files as $cache) {
-            if (!$this->ends_with($cache, $filename)) {
-                unlink($cache);
-            }
-        }
+        asort($classes);
+        return array_filter($classes);
     }
 
     private function array_flatten($array = null)

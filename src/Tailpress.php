@@ -4,7 +4,7 @@
  * The main plugin class
  *
  * @link              https://wpblock.dev/tailwind-wordpress/
- * @since             0.2.0
+ * @since             0.3.0
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -46,11 +46,26 @@ class Tailpress
         return $this->{$property};
     }
 
+    private function pageBufferCache()
+    {
+        $priority = 10;
+        add_action('template_redirect', function () {
+            $cache = new Cache($this);
+            ob_start(array($cache, 'check_buffer'));
+        }, $priority);
+
+        add_action('shutdown', function () {
+            if (ob_get_length() > 0) {
+                ob_end_flush();
+            }
+        }, -1 * $priority);
+    }
+
     public function boot()
     {
         $frontend = new Frontend($this);
         $admin = new Admin($this);
-        (new Cache($this))->boot();
+        $this->pageBufferCache();
 
         /**
          * Frontend Hooks
@@ -107,14 +122,5 @@ class Tailpress
         if ($shouldNotDie) {
             exit;
         }
-    }
-
-    public function enqueue_tailwind_assets()
-    {
-        $config = $this->settings->get_option('config');
-        if (empty($config)) $config = '{}';
-
-        wp_enqueue_script($this->main_script_name, $this->assets_js . 'tw-3.0.24.js');
-        wp_add_inline_script($this->main_script_name, "tailwind.config = $config", 'after');
     }
 }
