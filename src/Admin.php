@@ -56,7 +56,7 @@ class Admin
     public function clear_cache()
     {
         check_ajax_referer($this->admin_nonce_name, '_ajax_nonce');
-        (new Cache($this->tailpress))->purge_entire_cache();
+        Cache::purge_entire_cache();
         echo json_encode("OK");
         die();
     }

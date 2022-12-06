@@ -23,6 +23,7 @@ class Frontend
 
     public function enqueue_scripts()
     {
+        //TODO replcae cache
         $hash = $this->tailpress->get_url_hash();
         $files = glob($this->tailpress->css_cache_dir . "/$hash.*.css");
         if (isset($files[0]) && file_exists($files[0])) {

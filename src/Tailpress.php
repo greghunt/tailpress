@@ -19,14 +19,13 @@ use Blockpress\Tailpress\Settings;
 
 class Tailpress
 {
-    protected $name = 'tailpress';
+    const PLUGIN_NAME = 'tailpress';
     protected $version;
     protected $settings;
     protected $plugin_path;
     protected $plugin_url;
     protected $assets_js;
     protected $ajax_nonce_name;
-    protected $css_cache_dir;
     protected $main_script_name;
 
     public function __construct($file, $version)
@@ -35,9 +34,8 @@ class Tailpress
         $this->plugin_path = plugin_dir_path($file);
         $this->plugin_url = plugin_dir_url($file);
         $this->assets_js = $this->plugin_url . 'js/';
-        $this->ajax_nonce_name = $this->name . '_ajax_nonce';
-        $this->css_cache_dir = wp_get_upload_dir()['basedir'] . '/' . $this->name;
-        $this->main_script_name = $this->name . '-cdn';
+        $this->ajax_nonce_name = self::PLUGIN_NAME . '_ajax_nonce';
+        $this->main_script_name = self::PLUGIN_NAME . '-cdn';
         $this->settings = new Settings($this);
     }
 
@@ -49,9 +47,13 @@ class Tailpress
     private function pageBufferCache()
     {
         $priority = 10;
+
         add_action('template_redirect', function () {
-            $cache = new Cache($this);
-            ob_start(array($cache, 'check_buffer'));
+            if (!is_user_logged_in()) {
+                ob_start(function ($buffer) {
+                    (new Cache)->run($buffer);
+                });
+            }
         }, $priority);
 
         add_action('shutdown', function () {
@@ -98,22 +100,6 @@ class Tailpress
         );
         add_action('admin_menu', array($this->settings, 'add_menu_item'));
         add_action('admin_init', array($this->settings, 'init'));
-    }
-
-    public function get_url_hash($url = null)
-    {
-        if (is_null($url)) {
-            $host = $_SERVER['HTTP_HOST'];
-            $uri = parse_url($_SERVER['REQUEST_URI']);
-        } else {
-            $uri = parse_url(sanitize_url($url));
-            $host = $uri['host'];
-        }
-
-        $path = $uri['path'];
-        $query = $uri['query'] ?? '';
-
-        return md5($host . $path . $query);
     }
 
     public static function log($message, $shouldNotDie = true)

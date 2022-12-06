@@ -13,141 +13,63 @@
 
 namespace Blockpress\Tailpress;
 
-// URL loads and is assigned a unique URL HASH
-// buffer loads and is assigned a unique PAGE HASH
-// check all caches that start with URL HASH
-// if PAGE HASH doesn't match, regerate CSV
+use Blockpress\Tailpress\PageCache;
+use Blockpress\Tailpress\Tailpress;
+
 class Cache
 {
-    protected $tailpress;
+    protected $dir;
     protected $url_hash;
-    protected $page_hash;
-    protected $classnames;
-    protected $filename;
-    protected $filepath;
 
-    public function __construct($tailpress)
+    public function __construct()
     {
-        $this->tailpress = $tailpress;
+        $this->dir = self::get_dir();
+        $this->url_hash = self::get_url_hash();
+        if (!file_exists($this->dir)) {
+            wp_mkdir_p($this->dir);
+        }
     }
 
-    public function check_buffer($buffer)
+    public static function get_url_hash($url = null)
     {
-        if (is_user_logged_in()) {
-            return $buffer;
+        if (is_null($url)) {
+            $host = $_SERVER['HTTP_HOST'];
+            $uri = parse_url($_SERVER['REQUEST_URI']);
+        } else {
+            $uri = parse_url(sanitize_url($url));
+            $host = $uri['host'];
         }
 
-        if (!file_exists($this->tailpress->css_cache_dir)) {
-            wp_mkdir_p($this->tailpress->css_cache_dir);
+        $path = $uri['path'];
+        $query = $uri['query'] ?? '';
+
+        return md5($host . $path . $query);
+    }
+
+    public static function get_dir()
+    {
+        return wp_get_upload_dir()['basedir'] . '/' . Tailpress::PLUGIN_NAME;
+    }
+
+    public static function purge_entire_cache()
+    {
+        foreach (glob(self::get_dir() . "/*.*.*") as $file) {
+            unlink($file);
+        }
+    }
+
+    public function run($buffer)
+    {
+        $pageCache = new PageCache($buffer);
+        $css = new CssCache($pageCache);
+
+        if (!$pageCache->cache_is_valid()) {
+            $pageCache->push();
         }
 
-        $this->classnames = $this->get_classnames_from_buffer($buffer);
-        $this->url_hash = $this->tailpress->get_url_hash();
-        $this->page_hash = $this->get_page_hash($this->classnames);
-        $this->filename = implode('.', [
-            $this->url_hash, $this->page_hash, 'csv'
-        ]);
-        $this->filepath = $this->tailpress->css_cache_dir . "/" . $this->filename;
-
-        if ($this->cache_is_valid()) {
-            return $buffer;
-        }
-
-        $this->push();
+        if (!$css->cache_is_valid())
+            $css->save();
 
         return $buffer;
-    }
-
-    public function purge_entire_cache()
-    {
-        $files = glob($this->tailpress->css_cache_dir . "/*.*.*");
-        foreach ($files as $file)
-            unlink($file);
-    }
-
-    private function cache_is_valid()
-    {
-        return file_exists($this->filepath) &&
-            file_exists(str_replace('.csv', '.css', $this->filepath));
-    }
-
-    private function push()
-    {
-        $this->purge_invalid_cache();
-        $this->save_page_cache();
-    }
-
-    private function purge_invalid_cache()
-    {
-        $files = glob($this->tailpress->css_cache_dir . "/{$this->url_hash}.*.*");
-        foreach ($files as $file) {
-            unlink($file);
-        }
-    }
-
-    private function save_page_cache()
-    {
-        file_put_contents($this->filepath, $this->get_page_cache());
-        $this->save_css_cache();
-    }
-
-    private function save_css_cache()
-    {
-        $config = json_decode(
-            $this->tailpress->settings->get_option('config') ?? '{}'
-        );
-
-        $css_path = str_replace('.csv', '.css', $this->filepath);
-        $req = new \WP_Http();
-        $result = $req->post('https://tailwind.restedapi.com/api/v1', [
-            'body' => json_encode([
-                'text' => $this->get_page_cache(),
-                'options' => $config,
-            ])
-        ]);
-        $css = $result['body'];
-        file_put_contents($css_path, $css);
-    }
-
-    private function get_page_hash()
-    {
-        return md5($this->get_page_cache($this->classnames));
-    }
-
-    private function get_page_cache()
-    {
-        return implode(PHP_EOL, $this->classnames);
-    }
-
-    private function get_classnames_from_buffer($buffer)
-    {
-        $re = '/class="([^"]+)"/';
-        preg_match_all($re, $buffer, $matches, PREG_SET_ORDER, 0);
-        $classes = array_values(array_unique(
-            $this->array_flatten(array_map(function ($m) {
-                return explode(' ', strtolower($m[1]));
-            }, $matches))
-        ));
-        asort($classes);
-        return array_filter($classes);
-    }
-
-    private function array_flatten($array = null)
-    {
-        $result = array();
-
-        if (!is_array($array)) {
-            $array = func_get_args();
-        }
-
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $result = array_merge($result, $this->array_flatten($value));
-            } else {
-                $result = array_merge($result, array($key => $value));
-            }
-        }
-
-        return $result;
     }
 }
