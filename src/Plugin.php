@@ -3,23 +3,23 @@
 /**
  * The main plugin class
  *
- * @link              https://wpblock.dev/tailwind-wordpress/
+ * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
  * @since             0.3.0
  * @package           Tailpress
  *
  * @wordpress-plugin
  */
 
-namespace Blockpress\Tailpress;
+namespace FreshBrewedWeb\Tailpress;
 
-use Blockpress\Tailpress\Admin;
-use Blockpress\Tailpress\Cache;
-use Blockpress\Tailpress\Frontend;
-use Blockpress\Tailpress\Settings;
+use FreshBrewedWeb\Tailpress\Admin;
+use FreshBrewedWeb\Tailpress\Cache;
+use FreshBrewedWeb\Tailpress\Frontend;
+use FreshBrewedWeb\Tailpress\Settings;
 
-class Tailpress
+class Plugin
 {
-    const PLUGIN_NAME = 'tailpress';
+    protected $name = 'tailpress';
     protected $version;
     protected $settings;
     protected $plugin_path;
@@ -34,8 +34,7 @@ class Tailpress
         $this->plugin_path = plugin_dir_path($file);
         $this->plugin_url = plugin_dir_url($file);
         $this->assets_js = $this->plugin_url . 'js/';
-        $this->ajax_nonce_name = self::PLUGIN_NAME . '_ajax_nonce';
-        $this->main_script_name = self::PLUGIN_NAME . '-cdn';
+        $this->ajax_nonce_name = $this->name . '_ajax_nonce';
         $this->settings = new Settings($this);
     }
 
@@ -51,7 +50,8 @@ class Tailpress
         add_action('template_redirect', function () {
             if (!is_user_logged_in()) {
                 ob_start(function ($buffer) {
-                    (new Cache)->run($buffer);
+                    (new Cache($this))->run($buffer);
+                    return $buffer;
                 });
             }
         }, $priority);
@@ -72,10 +72,7 @@ class Tailpress
         /**
          * Frontend Hooks
          */
-        add_action(
-            'wp_enqueue_scripts',
-            array($frontend, 'enqueue_scripts')
-        );
+        add_action('wp_enqueue_scripts', array($frontend, 'enqueue_scripts'));
         add_action(
             'wp_ajax_nopriv_tailpress_ajax',
             array(
@@ -86,27 +83,32 @@ class Tailpress
         /**
          * Admin Hooks
          */
-        add_action(
-            'admin_enqueue_scripts',
-            array(
-                $admin, 'enqueue_scripts'
-            )
-        );
-        add_action(
-            'enqueue_block_editor_assets',
-            array(
-                $admin, 'enqueue_scripts'
-            )
-        );
+        add_action('admin_enqueue_scripts', array($admin, 'enqueue_scripts'));
         add_action('admin_menu', array($this->settings, 'add_menu_item'));
         add_action('admin_init', array($this->settings, 'init'));
     }
 
-    public static function log($message, $shouldNotDie = true)
+    public function get_client_scripts()
     {
-        error_log(print_r($message, true));
-        if ($shouldNotDie) {
-            exit;
-        }
+        $config = $this->settings->get_option('config');
+        if (empty($config)) $config = '{}';
+
+        $setup_script = <<<HTML
+            const options = $config
+            twind.install({
+                presets: [
+                    twind.presetExt( /* options */ )
+                    twind.presetLineClamp( /* options */ )
+                    twind.presetTailwindForms( /* options */ )
+                    twind.presetTypography( /* options */ )
+                ],
+                ...options
+            })
+        HTML;
+
+        return [
+            'main' => $this->assets_js . 'twind.cdn.1.0.1.js',
+            'setup' => $setup_script,
+        ];
     }
 }

@@ -3,21 +3,17 @@
 /**
  * Responsible for managing plugin settings
  *
- * @link              https://blockpress.dev/tailwind-wordpress/
- * @since             0.2.0
+ * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
+ * @since             0.3.0
  * @package           Tailpress
  *
  * @wordpress-plugin
  */
 
-namespace Blockpress\Tailpress;
+namespace FreshBrewedWeb\Tailpress;
 
-/**
- * Manages the creation of settings and controls
- * for this plugin. 
- * 
- * @since 0.2.0
- */
+use FreshBrewedWeb\Tailpress\Plugin;
+
 class Settings
 {
 
@@ -27,7 +23,7 @@ class Settings
     private $options_name;
     private $options;
 
-    public function __construct(Tailpress $plugin)
+    public function __construct(Plugin $plugin)
     {
         $this->plugin = $plugin;
         $this->add_page('settings', 'TailPress Settings');

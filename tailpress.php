@@ -3,18 +3,18 @@
 /**
  * The plugin bootstrap file
  *
- * @link              https://wpblock.dev/tailwind-wordpress/
+ * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
  * @since             0.3.0
  * @package           Tailpress
  *
  * @wordpress-plugin
  * 
  * Plugin Name:       TailPress
- * Plugin URI:        https://wpblock.dev/tailwind-wordpress/
+ * Plugin URI:        https://greghunt.dev/posts/tailwind-for-wordpress/
  * Description:       Seamlessly add Tailwind to your WordPress site without any build steps.
  * Version:           0.3.0
- * Author:            blockpress
- * Author URI:        https://wpblock.dev
+ * Author:            freshbrewedweb
+ * Author URI:        https://greghunt.dev
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       wptw
@@ -27,6 +27,11 @@ if (!defined('WPINC')) {
 
 require 'vendor/autoload.php';
 
-use Blockpress\Tailpress\Tailpress;
+use FreshBrewedWeb\Tailpress\Plugin;
 
-(new Tailpress(__FILE__, '0.3.0'))->boot();
+function tailpress_log($message)
+{
+    error_log(print_r($message, true));
+}
+
+(new Plugin(__FILE__, '0.3.0'))->boot();

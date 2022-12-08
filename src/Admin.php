@@ -3,28 +3,27 @@
 /**
  * For maintaining the admin interface.
  *
- * @link              https://blockpress.dev/tailwind-wordpress/
+ * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
  * @since             0.3.0
  * @package           Tailpress
  *
  * @wordpress-plugin
  */
 
-namespace Blockpress\Tailpress;
+namespace FreshBrewedWeb\Tailpress;
 
-use Blockpress\Tailpress\Settings;
-use Blockpress\Tailpress\Cache;
+use FreshBrewedWeb\Tailpress\Cache;
+use FreshBrewedWeb\Tailpress\Plugin;
 
 class Admin
 {
-    protected $tailpress;
+    protected $plugin;
     protected $admin_nonce_name;
 
-    public function __construct($tailpress)
+    public function __construct(Plugin $plugin)
     {
-        $this->tailpress = $tailpress;
-        $this->settings = new Settings($this->tailpress);
-        $this->admin_nonce_name = $this->tailpress->name . '_clear_cache';
+        $this->plugin = $plugin;
+        $this->admin_nonce_name = $this->plugin->name . '_clear_cache';
         add_action(
             'wp_ajax_tailpress_ajax_clear_cache',
             array($this, 'clear_cache')
@@ -35,11 +34,14 @@ class Admin
     {
         $screen = get_current_screen();
         if (is_admin() && $screen->is_block_editor()) {
-            $this->tailpress->enqueue_tailwind_assets();
+            $scripts = $this->plugin->get_client_scripts();
+            $name = $this->plugin->name . '_twind_admin';
+            wp_enqueue_script($name, $scripts['main']);
+            wp_add_inline_script($name, $scripts['setup']);
         }
 
         if (is_admin() && $screen->id === 'settings_page_tailpress-settings') {
-            wp_enqueue_script($this->admin_nonce_name, $this->tailpress->assets_js . 'clear-cache.js', array(), '1.0');
+            wp_enqueue_script($this->admin_nonce_name, $this->plugin->assets_js . 'clear-cache.js', array(), '1.0');
             wp_localize_script(
                 $this->admin_nonce_name,
                 $this->admin_nonce_name . '_ajax_object',
@@ -56,7 +58,7 @@ class Admin
     public function clear_cache()
     {
         check_ajax_referer($this->admin_nonce_name, '_ajax_nonce');
-        Cache::purge_entire_cache();
+        (new Cache($this->plugin))->purge_entire_cache();
         echo json_encode("OK");
         die();
     }

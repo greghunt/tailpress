@@ -2,19 +2,18 @@
 
 /**
  *
- * @link              https://blockpress.dev/tailwind-wordpress/
+ * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
  * @since             0.3.0
  * @package           Tailpress
  *
  * @wordpress-plugin
  */
 
-namespace Blockpress\Tailpress;
+namespace FreshBrewedWeb\Tailpress;
 
 class PageCache
 {
     protected $cache;
-    protected $page_hash;
     protected $classnames;
     protected $filename;
     protected $filepath;
@@ -23,11 +22,18 @@ class PageCache
     {
         $this->cache = $cache;
         $this->classnames = $this->get_classnames_from_buffer($buffer);
-        $this->page_hash = $this->hash($this->classnames);
-        $this->filename = implode('.', [
-            $this->url_hash, $this->page_hash, 'csv'
-        ]);
-        $this->filepath = $this->tailpress->css_cache_dir . "/" . $this->filename;
+        $this->filename = $this->get_key() . '.csv';
+        $this->filepath = $this->cache->get_dir() . "/" . $this->filename;
+    }
+
+    public function get_cache()
+    {
+        return $this->cache;
+    }
+
+    public function get_classnames()
+    {
+        return $this->classnames;
     }
 
     public function cache_is_valid()
@@ -43,7 +49,7 @@ class PageCache
 
     public function purge_invalid()
     {
-        $files = glob($this->tailpress->css_cache_dir . "/{$this->url_hash}.*.*");
+        $files = glob($this->cache->get_dir() . "/{$this->cache->get_url_hash()}.*.*");
         foreach ($files as $file) {
             unlink($file);
         }
@@ -51,7 +57,7 @@ class PageCache
 
     public function get_key()
     {
-        return $this->url_hash . '.' . $this->pageCache->hash();
+        return $this->cache->get_url_hash() . '.' . $this->hash();
     }
 
     public function save()

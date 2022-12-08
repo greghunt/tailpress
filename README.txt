@@ -1,6 +1,6 @@
 === TailPress – Tailwind for WordPress ===
-Contributors: blockpress
-Donate link: https://wpblock.dev
+Contributors: freshbrewedweb
+Donate link: https://greghunt.dev
 Tags: tailwind, blocks, gutenberg, utility classes, css
 Requires at least: 5.2
 Requires PHP: 5.6
@@ -24,13 +24,18 @@ It's also for those who have struggled to add Tailwind to their workflow without
 
 === How it Works ===
 
-* Uses the official Tailwind CDN to dynamically add any class on the fly
+* Extracts classes from pages and compiles them server-side into Tailwind CSS
 * Caches the dynamically generated CSS to avoid performance issues on the frontend of your production site. 
 
-https://youtu.be/SPYmJfExn-U
+https://youtu.be/qDZ3_Z7MXPM
 
 
 == Frequently Asked Questions ==
+
+=== Are you affiliated with tailpress.io the theme? ===
+No, we are not! Unfortunately the same name was used for both out of coincidence, but we are not affiliated and are two different solutions. [Tailpress.io](https://tailpress.io) is a great starting point for developing custom themes with deep integration of Tailwind. I would recommend it for any developer that wants to build a custom theme that depends heavily on Tailwind. 
+
+Tailpress, this plugin, adds Tailwind support to any project as an add-on. It can be used as much or as little as you need, added to custom themes or pre-existing ones.
 
 === Can this be used in production? ===
 Yes! Although the styles in the backend get generated on the fly, the CSS on the frontend gets cached for every page. Changing any classes on the page will bust the cache automatically so it'll still stay up to date with any changes.
@@ -63,7 +68,8 @@ If you have any page caching on your site, you'll have to clear your cache for t
 
 = 0.3.0 =
 * Added a clear cache button.
-* Use a backend API service for compiling CSS.
+* Use a remote service for compiling CSS.
+* Added disclaimer about tailpress.io
 
 = 0.2.0 =
 * Added a settings page to configure Tailwind.

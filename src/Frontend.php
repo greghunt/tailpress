@@ -3,38 +3,41 @@
 /**
  * Responsible for managing the frontend of the website.
  *
- * @link              https://blockpress.dev/tailwind-wordpress/
+ * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
  * @since             0.3.0
  * @package           Tailpress
  *
  * @wordpress-plugin
  */
 
-namespace Blockpress\Tailpress;
+namespace FreshBrewedWeb\Tailpress;
 
 class Frontend
 {
-    protected $tailpress;
+    protected $plugin;
+    protected $cache;
 
-    public function __construct($tailpress)
+    public function __construct(Plugin $plugin)
     {
-        $this->tailpress = $tailpress;
+        $this->plugin = $plugin;
+        $this->cache = new Cache($this->plugin);
     }
 
     public function enqueue_scripts()
     {
-        //TODO replcae cache
-        $hash = $this->tailpress->get_url_hash();
-        $files = glob($this->tailpress->css_cache_dir . "/$hash.*.css");
-        if (isset($files[0]) && file_exists($files[0])) {
-            $file_cache = $files[0];
-            add_action('wp_head', function () use ($file_cache) {
+        if ($css_path = $this->cache->get_css_path()) {
+            add_action('wp_head', function () use ($css_path) {
                 echo sprintf(
                     '<style id="%s">%s</style>',
-                    esc_attr($this->tailpress->name),
-                    esc_html(file_get_contents($file_cache))
+                    esc_attr($this->plugin->name),
+                    esc_html(file_get_contents($css_path))
                 );
             }, 50);
+        } else {
+            $scripts = $this->plugin->get_client_scripts();
+            $name = $this->plugin->name . '_twind';
+            wp_enqueue_script($name, $scripts['main']);
+            wp_add_inline_script($name, $scripts['setup']);
         }
     }
 }

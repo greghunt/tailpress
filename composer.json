@@ -1,16 +1,16 @@
 {
-    "name": "blockpress/tailpress",
+    "name": "freshbrewedweb/tailpress",
     "description": "WordPress Plugin to integrate Tailwind",
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Blockpress\\Tailpress\\": "src/"
+            "FreshBrewedWeb\\Tailpress\\": "src/"
         }
     },
     "authors": [
         {
             "name": "Greg Hunt",
-            "email": "wordpress@greghunt.dev"
+            "email": "accounts@freshbrewedweb.com"
         }
     ]
 }
