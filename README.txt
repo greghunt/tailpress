@@ -3,7 +3,7 @@ Contributors: freshbrewedweb
 Donate link: https://greghunt.dev
 Tags: tailwind, blocks, gutenberg, utility classes, css
 Requires at least: 5.2
-Requires PHP: 5.6
+Requires PHP: 7.0
 Tested up to: 6.1
 Stable tag: 0.3.1
 License: GPLv2 or later
