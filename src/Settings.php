@@ -4,7 +4,7 @@
  * Responsible for managing plugin settings
  *
  * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
- * @since             0.3.0
+ * @since             0.3.1
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -69,7 +69,7 @@ class Settings
                 $section,
                 $c['label'],
                 [$this, 'renderSection'],
-                $this->page,
+                $this->page
             );
 
             foreach ($c['fields'] as $field) {
