@@ -30,7 +30,7 @@ class Frontend
                 echo sprintf(
                     '<style id="%s">%s</style>',
                     esc_attr($this->plugin->name),
-                    esc_html(file_get_contents($css_path))
+                    file_get_contents($css_path)
                 );
             }, 50);
         } else {

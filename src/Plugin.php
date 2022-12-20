@@ -48,7 +48,7 @@ class Plugin
         $priority = 10;
 
         add_action('template_redirect', function () {
-            if (!is_user_logged_in()) {
+            if (!is_user_logged_in() && !is_admin()) {
                 ob_start(function ($buffer) {
                     (new Cache($this))->run($buffer);
                     return $buffer;
@@ -96,18 +96,12 @@ class Plugin
         $setup_script = <<<HTML
             const options = $config
             twind.install({
-                presets: [
-                    twind.presetExt( /* options */ )
-                    twind.presetLineClamp( /* options */ )
-                    twind.presetTailwindForms( /* options */ )
-                    twind.presetTypography( /* options */ )
-                ],
                 ...options
             })
         HTML;
 
         return [
-            'main' => $this->assets_js . 'twind.cdn.1.0.1.js',
+            'main' => $this->assets_js . 'twind.cdn.1.0.2.js',
             'setup' => $setup_script,
         ];
     }

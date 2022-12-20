@@ -49,7 +49,7 @@ class PageCache
 
     public function purge_invalid()
     {
-        $files = glob($this->cache->get_dir() . "/{$this->cache->get_url_hash()}.*.*");
+        $files = glob($this->get_key() . ".*");
         foreach ($files as $file) {
             unlink($file);
         }
