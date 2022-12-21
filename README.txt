@@ -5,7 +5,7 @@ Tags: tailwind, blocks, gutenberg, utility classes, css
 Requires at least: 5.2
 Requires PHP: 7.0
 Tested up to: 6.1
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -65,6 +65,9 @@ The non-desktop preview modes in the block editor utilize an iframe and [don't l
 If you have any page caching on your site, you'll have to clear your cache for the best experience. 
 
 == Changelog ==
+
+= 0.3.2 =
+* Updated Twind script not to include presets
 
 = 0.3.1 =
 * Fixed trailing comma in function for better PHP support

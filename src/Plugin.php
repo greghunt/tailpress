@@ -4,7 +4,7 @@
  * The main plugin class
  *
  * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
- * @since             0.3.0
+ * @since             0.3.2
  * @package           Tailpress
  *
  * @wordpress-plugin
