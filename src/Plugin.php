@@ -88,6 +88,11 @@ class Plugin
         add_action('admin_init', array($this->settings, 'init'));
     }
 
+    /**
+     * Link: https://cdn.jsdelivr.net/npm/@twind/core@1
+     * Docs: https://twind.style/installation#twind-cdn
+     * When using presets, core file needs to be updated.
+     */
     public function get_client_scripts()
     {
         $config = $this->settings->get_option('config');
@@ -101,7 +106,7 @@ class Plugin
         HTML;
 
         return [
-            'main' => $this->assets_js . 'twind.cdn.1.0.2.js',
+            'main' => $this->assets_js . 'twind.cdn.1.0.5.js',
             'setup' => $setup_script,
         ];
     }
