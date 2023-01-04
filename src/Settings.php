@@ -13,6 +13,7 @@
 namespace FreshBrewedWeb\Tailpress;
 
 use FreshBrewedWeb\Tailpress\Plugin;
+use FreshBrewedWeb\Tailpress\Cache;
 
 class Settings
 {
@@ -29,6 +30,10 @@ class Settings
         $this->add_page('settings', 'TailPress Settings');
         $this->options_name = $this->plugin->name . '_plugin_options';
         $this->options = get_option($this->options_name);
+
+        add_action('update_option_tailpress_plugin_options', function () {
+            (new Cache($this->plugin))->purge_entire_cache();
+        }, 10, 0);
     }
 
     public function add_page($slug, $title = null)

@@ -110,4 +110,22 @@ class Plugin
             'setup' => $setup_script,
         ];
     }
+
+    public function get_admin_scripts()
+    {
+        $config = $this->settings->get_option('config');
+        if (empty($config)) $config = '{}';
+
+        $setup_script = <<<JS
+            const options = $config
+            twind.install({
+                ...options,
+            })
+        JS;
+
+        return [
+            'main' => $this->assets_js . 'twind.cdn.1.0.5.js',
+            'setup' => $setup_script,
+        ];
+    }
 }

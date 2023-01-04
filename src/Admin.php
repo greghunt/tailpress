@@ -34,7 +34,7 @@ class Admin
     {
         $screen = get_current_screen();
         if (is_admin() && $screen->is_block_editor()) {
-            $scripts = $this->plugin->get_client_scripts();
+            $scripts = $this->plugin->get_admin_scripts();
             $name = $this->plugin->name . '_twind_admin';
             wp_enqueue_script($name, $scripts['main']);
             wp_add_inline_script($name, $scripts['setup']);
