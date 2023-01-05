@@ -34,6 +34,35 @@ class Settings
         add_action('update_option_tailpress_plugin_options', function () {
             (new Cache($this->plugin))->purge_entire_cache();
         }, 10, 0);
+
+        register_activation_hook(
+            $this->plugin->plugin_file,
+            array($this, 'activate')
+        );
+        register_deactivation_hook(
+            $this->plugin->plugin_file,
+            array($this, 'deactivate')
+        );
+    }
+
+    public function activate()
+    {
+        $default_config = <<<JSON
+        {
+            "preflight": false
+        }
+        JSON;
+
+        if (!get_option($this->options_name)) {
+            add_option($this->options_name, array('config' => $default_config));
+        }
+    }
+
+    public function deactivate()
+    {
+        if ($this->get_option('cleanup') == '1') {
+            delete_option($this->options_name);
+        }
     }
 
     public function add_page($slug, $title = null)
@@ -158,13 +187,6 @@ class Settings
 
     public function init()
     {
-        $default_config = <<<EOT
-        {
-            "preflight": false
-        }
-        EOT;
-
-        add_option($this->options_name, array('config' => $default_config));
         register_setting($this->options_name, $this->options_name);
         $this->registerSettings($this->getSettingsConfig());
     }
@@ -179,14 +201,13 @@ class Settings
                         'name' => 'config',
                         'label' => 'Tailwind Config',
                     ],
-                ],
-            ],
-            'caching' => [
-                'label' => 'Caching',
-                'fields' => [
                     [
                         'name' => 'clear-cache',
                         'label' => 'Cache',
+                    ],
+                    [
+                        'name' => 'cleanup',
+                        'label' => 'Cleanup',
                     ],
                 ],
             ],

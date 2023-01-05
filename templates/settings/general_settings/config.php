@@ -1,6 +1,6 @@
 <div class="form-field">
-    <json-editor style=" height: 20em; width: calc(100% - 60px); padding:30px" id="json-editor" value='<?php echo $this->get_option('config'); ?>'></json-editor>
-    <input type="hidden" id="<?php echo $id ?>" name="<?php echo $name ?>" />
+    <json-editor style=" height: 20em; width: calc(100% - 60px); padding:30px" id="json-editor" value='<?php echo esc_attr($this->get_option('config')); ?>'></json-editor>
+    <input type="hidden" id="<?php echo $id ?>" name="<?php echo $name ?>" value='<?php echo esc_attr($this->get_option('config')); ?>' />
     <script>
         const $conf = document.getElementById('tailpress_config');
         document.getElementById('json-editor').addEventListener('keyup', (event) => {

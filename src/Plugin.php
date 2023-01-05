@@ -22,6 +22,7 @@ class Plugin
     protected $name = 'tailpress';
     protected $version;
     protected $settings;
+    protected $plugin_file;
     protected $plugin_path;
     protected $plugin_url;
     protected $assets_js;
@@ -31,7 +32,8 @@ class Plugin
     public function __construct($file, $version)
     {
         $this->version = $version;
-        $this->plugin_path = plugin_dir_path($file);
+        $this->plugin_file = $file;
+        $this->plugin_path = plugin_dir_path($this->plugin_file);
         $this->plugin_url = plugin_dir_url($file);
         $this->assets_js = $this->plugin_url . 'js/';
         $this->ajax_nonce_name = $this->name . '_ajax_nonce';
