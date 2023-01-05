@@ -4,7 +4,7 @@
  * For maintaining the admin interface.
  *
  * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
- * @since             0.3.3
+ * @since             0.4.0
  * @package           Tailpress
  *
  * @wordpress-plugin

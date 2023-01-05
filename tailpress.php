@@ -4,7 +4,7 @@
  * The plugin bootstrap file
  *
  * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
- * @since             0.3.2
+ * @since             0.4.0
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -12,7 +12,7 @@
  * Plugin Name:       TailPress
  * Plugin URI:        https://greghunt.dev/posts/tailwind-for-wordpress/
  * Description:       Seamlessly add Tailwind to your WordPress site without any build steps.
- * Version:           0.3.2
+ * Version:           0.4.0
  * Author:            freshbrewedweb
  * Author URI:        https://greghunt.dev
  * License:           GPL-2.0+
@@ -34,4 +34,4 @@ function tailpress_log($message)
     error_log(print_r($message, true));
 }
 
-(new Plugin(__FILE__, '0.3.2'))->boot();
+(new Plugin(__FILE__, '0.4.0'))->boot();
