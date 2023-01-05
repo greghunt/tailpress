@@ -4,7 +4,7 @@
  * Responsible for managing plugin settings
  *
  * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
- * @since             0.3.1
+ * @since             0.3.3
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -118,14 +118,19 @@ class Settings
     {
         do_action(implode('_', ['before', $this->page, 'page']));
 ?>
-        <h2><?php echo $this->page_title ?></h2>
-        <form action="options.php" method="post">
-            <?php
-            settings_fields($this->options_name);
-            do_settings_sections($this->page);
-            ?>
-            <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e('Save'); ?>" />
-        </form>
+        <div class="wrap" style="max-width:80em;">
+            <h2><?php echo $this->page_title ?></h2>
+            <form action="options.php" method="post">
+                <?php
+                settings_fields($this->options_name);
+                do_settings_sections($this->page);
+                ?>
+                <hr />
+                <div style="text-align:right">
+                    <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e('Save'); ?>" />
+                </div>
+            </form>
+        </div>
 <?php
         do_action(implode('_', ['after', $this->page, 'page']));
     }

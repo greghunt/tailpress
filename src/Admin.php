@@ -4,7 +4,7 @@
  * For maintaining the admin interface.
  *
  * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
- * @since             0.3.0
+ * @since             0.3.3
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -41,6 +41,8 @@ class Admin
         }
 
         if (is_admin() && $screen->id === 'settings_page_tailpress-settings') {
+            wp_enqueue_script('tailpress-json-editor', $this->plugin->assets_js . 'vendor/json-editor.0.2.4.js', array(), '0.2.4');
+
             wp_enqueue_script($this->admin_nonce_name, $this->plugin->assets_js . 'clear-cache.js', array(), '1.0');
             wp_localize_script(
                 $this->admin_nonce_name,
