@@ -1,6 +1,6 @@
 === TailPress – Tailwind for WordPress ===
 Contributors: freshbrewedweb
-Donate link: https://www.buymeacoffee.com/greghunt
+Donate link: https://greghunt.dev/donate
 Tags: tailwind, blocks, gutenberg, utility classes, css
 Requires at least: 5.2
 Requires PHP: 7.0
