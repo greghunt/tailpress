@@ -4,7 +4,7 @@
  * The main plugin class
  *
  * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
- * @since             0.4.1
+ * @since             0.4.3
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -100,16 +100,16 @@ class Plugin
         $config = $this->settings->get_option('config');
         if (empty($config)) $config = '{}';
 
-        $setup_script = <<<JS
+        $setup_script = "
             const options = $config
             twind.install({
                 ...options,
             })
-        JS;
+        ";
 
         return [
             'main' => $this->assets_js . 'twind.cdn.1.0.5.js',
-            'setup' => $setup_script,
+            'setup' => $setup_script
         ];
     }
 
@@ -118,16 +118,16 @@ class Plugin
         $config = $this->settings->get_option('config');
         if (empty($config)) $config = '{}';
 
-        $setup_script = <<<JS
+        $setup_script = "
             const options = $config
             twind.install({
                 ...options,
             })
-        JS;
+        ";
 
         return [
             'main' => $this->assets_js . 'twind.cdn.1.0.8.js',
-            'setup' => $setup_script,
+            'setup' => $setup_script
         ];
     }
 }

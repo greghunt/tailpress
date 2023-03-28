@@ -4,7 +4,7 @@
  * For maintaining the admin interface.
  *
  * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
- * @since             0.4.0
+ * @since             0.4.3
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -52,7 +52,7 @@ class Admin
                     'ajax_nonce' => wp_create_nonce(
                         $this->admin_nonce_name
                     )
-                ),
+                )
             );
         }
     }

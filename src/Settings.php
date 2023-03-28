@@ -4,7 +4,7 @@
  * Responsible for managing plugin settings
  *
  * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
- * @since             0.4.0
+ * @since             0.4.3
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -47,11 +47,9 @@ class Settings
 
     public function activate()
     {
-        $default_config = <<<JSON
-        {
+        $default_config = '{
             "preflight": false
-        }
-        JSON;
+        }';
 
         if (!get_option($this->options_name)) {
             add_option($this->options_name, array('config' => $default_config));
