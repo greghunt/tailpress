@@ -4,7 +4,7 @@
  * The main plugin class
  *
  * @link              https://greghunt.dev/posts/tailwind-for-wordpress/
- * @since             0.4.3
+ * @since             0.4.4
  * @package           Tailpress
  *
  * @wordpress-plugin
@@ -104,6 +104,7 @@ class Plugin
             const options = $config
             twind.install({
                 ...options,
+                hash: (className) => className,
             })
         ";
 

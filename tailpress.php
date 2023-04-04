@@ -12,7 +12,7 @@
  * Plugin Name:       TailPress
  * Plugin URI:        https://greghunt.dev/posts/tailwind-for-wordpress/
  * Description:       Seamlessly add Tailwind to your WordPress site without any build steps.
- * Version:           0.4.3
+ * Version:           0.4.4
  * Author:            freshbrewedweb
  * Author URI:        https://greghunt.dev
  * License:           GPL-2.0+
@@ -25,7 +25,7 @@ if (!defined('WPINC')) {
     die;
 }
 
-require 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 use FreshBrewedWeb\Tailpress\Plugin;
 
